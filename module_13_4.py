@@ -20,11 +20,19 @@ class UserState(StatesGroup):  # Наследуемся от StatesGroup для 
     growth = State()  # Состояние для хранения роста
     weight = State()  # Состояние для хранения веса
 
+@dp.message_handler(commands = ['start'])
+async def start_message(message):
+    await message.answer('Привет! Я бот помогающий твоему здоровью.')
+
 # Функция для запуска цепочки
-@dp.message_handler(commands=['Calories'])  # Декорируем функцию для обработки команды '/Calories'
+@dp.message_handler(text = ['Calories'])  # Декорируем функцию для обработки ожидания слова 'Calories'
 async def set_age(message: types.Message):  # Асинхронная функция для обработки команды
     await message.answer('Введите свой возраст:')  # Отправляем сообщение с просьбой ввести возраст
     await UserState.age.set()  # Переводим пользователя в состояние ожидания ввода возраста
+
+@dp.message_handler()
+async def all_message(message):
+    await message.answer("Введите команду /start, чтобы начать общение.")
 
 # Обработка возраста
 @dp.message_handler(state=UserState.age)  # Декорируем функцию для обработки состояния 'age'
